@@ -1,0 +1,3 @@
+package: github.com/Turbots/go-encrypt
+import:
+- package: github.com/openshift/client-go
