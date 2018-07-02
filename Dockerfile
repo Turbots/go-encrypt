@@ -1,4 +1,4 @@
-FROM dockerhub.com/golang:latest as builder
+FROM golang:1.10 as builder
 
 ENV GOBIN /go/bin
 RUN mkdir /app
