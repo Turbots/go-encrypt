@@ -1,1 +1,7 @@
-package go_encrypt
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Printf("Hello World")
+}
