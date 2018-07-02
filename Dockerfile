@@ -1,4 +1,4 @@
-FROM golang as builder
+FROM openshift/golang as builder
 
 ENV GOBIN /go/bin
 RUN mkdir /app
