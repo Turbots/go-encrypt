@@ -1,0 +1,23 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "go-encrypt-build"
+spec:
+  triggers:
+    - type: "GitHub"
+      github:
+        secret: "secret101"
+    - type: "Generic"
+      generic:
+        secret: "secret101"
+  source:
+    type: "Git"
+    git:
+      uri: "https://github.com/Turbots/go-encrypt"
+    dockerfilePath: "Dockerfile"
+  strategy:
+    type: "Docker"
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "go-encrypt:latest"
