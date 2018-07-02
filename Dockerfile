@@ -1,19 +1,16 @@
-FROM arnaudgiuliani/golang-glide as builder
+FROM golang as builder
 
-ENV APP_PATH=/go/src/github.com/Turbots/go-encrypt
-
-RUN mkdir -p $APP_PATH
-#ADD . $APP_PATH
-WORKDIR $APP_PATH
-
-COPY glide.yaml glide.yaml
-COPY glide.lock glide.lock
-
-RUN glide install -v
-
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
+ENV GOBIN /go/bin
+RUN mkdir /app
+RUN mkdir /go/src/app
+ADD . /go/src/app
+WORKDIR /go/src/app
+RUN go get -u github.com/golang/dep/...
+RUN dep ensure
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o /app/main .
 
 FROM scratch
-COPY --from=builder $APP_PATH /app/
+
+COPY --from=builder /app/main /app/
 WORKDIR /app
 CMD ["./main"]
