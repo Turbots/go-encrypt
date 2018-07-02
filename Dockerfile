@@ -6,6 +6,9 @@ RUN mkdir -p $APP_PATH
 #ADD . $APP_PATH
 WORKDIR $APP_PATH
 
+COPY glide.yaml glide.yaml
+COPY glide.lock glide.lock
+
 RUN glide install -v
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
