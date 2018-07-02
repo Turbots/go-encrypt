@@ -1,4 +1,4 @@
-FROM openshift/golang as builder
+FROM dockerhub.com/golang:latest as builder
 
 ENV GOBIN /go/bin
 RUN mkdir /app
