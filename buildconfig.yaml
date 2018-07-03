@@ -3,20 +3,28 @@ apiVersion: "v1"
 metadata:
   name: "go-encrypt-build"
 spec:
-  triggers:
-    - type: "GitHub"
-      github:
-        secret: "secret101"
-    - type: "Generic"
-      generic:
-        secret: "secret101"
   source:
-    type: "Git"
-    git:
-      uri: "https://github.com/Turbots/go-encrypt"
-    dockerfilePath: "Dockerfile"
+    dockerfile: |-
+      FROM scratch
+
+      COPY main /app/
+      WORKDIR /app
+      CMD ["./main"]
+    images:
+    - from:
+        kind: ImageStreamTag
+        name: go-encrypt-exe:latest
+      paths:
+      - sourcePath: /app/main
+        destinationDir: "."
   strategy:
-    type: "Docker"
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: jee-runtime:latest
+  triggers:
+  - imageChange: {}
+    type: ImageChange
   output:
     to:
       kind: "ImageStreamTag"
