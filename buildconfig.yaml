@@ -12,19 +12,14 @@ spec:
       CMD ["./main"]
     images:
     - from:
-        kind: ImageStreamTag
-        name: go-encrypt-exe:latest
+        kind: "ImageStreamTag"
+        name: "go-encrypt-exe:latest"
       paths:
-      - sourcePath: /app/main
+      - sourcePath: "/app/main"
         destinationDir: "."
-  strategy:
-    dockerStrategy:
-      from:
-        kind: ImageStreamTag
-        name: jee-runtime:latest
   triggers:
   - imageChange: {}
-    type: ImageChange
+    type: "ImageChange"
   output:
     to:
       kind: "ImageStreamTag"

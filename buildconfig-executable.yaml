@@ -3,6 +3,10 @@ apiVersion: "v1"
 metadata:
   name: "go-encrypt-exe-build"
 spec:
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
   triggers:
     - type: "GitHub"
       github:
