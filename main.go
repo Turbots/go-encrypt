@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 
-	k8sMetaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sCoreV1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	k8sMetav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8sCorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	k8sClientCmd "k8s.io/client-go/tools/clientcmd"
-	"k8s.io/api/core/v1"
+	routev1 "github.com/openshift/api/route/v1"
+	routeClientv1 "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
 )
 
 func main() {
@@ -25,12 +26,12 @@ func main() {
 		panic(err)
 	}
 
-	coreClient, err := k8sCoreV1.NewForConfig(restConfig)
+	coreClient, err := k8sCorev1.NewForConfig(restConfig)
 	if err != nil {
 		panic(err)
 	}
 
-	pods, err := coreClient.Pods(namespace).List(k8sMetaV1.ListOptions{})
+	pods, err := coreClient.Pods(namespace).List(k8sMetav1.ListOptions{})
 	if err != nil {
 		panic(err)
 	}
@@ -40,18 +41,15 @@ func main() {
 		fmt.Printf("  %s\n", pod.Name)
 	}
 
-	watch, err := coreClient.Services(namespace).Watch(k8sMetaV1.ListOptions{})
+	routeClient, err := routeClientv1.NewForConfig(restConfig)
+	routeWatch, err := routeClient.Routes(namespace).Watch(k8sMetav1.ListOptions{})
 
 	for {
 		select {
-		case event := <-watch.ResultChan():
-			service := event.Object.(*v1.Service)
+		case event := <-routeWatch.ResultChan():
+			route := event.Object.(*routev1.Route)
 
-			fmt.Printf("Service %s has the following labels:", service.Name)
-
-			for key, value := range service.Labels {
-				fmt.Printf("Key, Value: %s %s\n", key, value)
-			}
+			fmt.Println("Route\t", route.Name, "\t", route.Spec.Host)
 		}
 	}
 }

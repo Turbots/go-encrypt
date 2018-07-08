@@ -53,6 +53,21 @@
   version = "1.0.1"
 
 [[projects]]
+  name = "github.com/openshift/api"
+  packages = ["route/v1"]
+  revision = "0d921e363e951d89f583292c60d013c318df64dc"
+  version = "v3.9.0"
+
+[[projects]]
+  name = "github.com/openshift/client-go"
+  packages = [
+    "route/clientset/versioned/scheme",
+    "route/clientset/versioned/typed/route/v1"
+  ]
+  revision = "1fa528d3be060e4c7178eb69e76d37cf7e699e3c"
+  version = "v3.9.0"
+
+[[projects]]
   name = "github.com/spf13/pflag"
   packages = ["."]
   revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
@@ -74,7 +89,7 @@
     "http2/hpack",
     "idna"
   ]
-  revision = "ed29d75add3d7c4bf7ca65aac0c6df3d1420216f"
+  revision = "32a936f46389aa10549d60bd7833e54b01685d09"
 
 [[projects]]
   branch = "master"
@@ -83,7 +98,7 @@
     "unix",
     "windows"
   ]
-  revision = "7138fd3d9dc8335c567ca206f4333fb75eb05d56"
+  revision = "3c6ecd8f22c6f40fbeec94c000a069d7d87c7624"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -158,7 +173,7 @@
     "storage/v1alpha1",
     "storage/v1beta1"
   ]
-  revision = "5f0d8f067e3bc465077d0333e891450326a577a3"
+  revision = "8be2a0b24ed0dac9cfc1ac2d987ea16cfcdbecb6"
 
 [[projects]]
   branch = "master"
@@ -189,6 +204,7 @@
     "pkg/util/framer",
     "pkg/util/intstr",
     "pkg/util/json",
+    "pkg/util/naming",
     "pkg/util/net",
     "pkg/util/runtime",
     "pkg/util/sets",
@@ -200,7 +216,7 @@
     "pkg/watch",
     "third_party/forked/golang/reflect"
   ]
-  revision = "cf7ae2f57dabc02a3d215f15ca61ae1446f3be8f"
+  revision = "bce280dade67588308614434551c0b865433e44d"
 
 [[projects]]
   name = "k8s.io/client-go"
@@ -234,6 +250,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "89902ec750397000b573a54e029b203ce76012ca89f9ee2fc28cff52e45fecb4"
+  inputs-digest = "b14d779589ec893bd49eba9acaf9fdfca574684c52dbf70de8abeb4b65c63cf8"
   solver-name = "gps-cdcl"
   solver-version = 1
