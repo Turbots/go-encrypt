@@ -8,6 +8,7 @@ import (
 
 	"github.com/op/go-logging"
 	"os"
+	"k8s.io/apimachinery/pkg/watch"
 )
 
 var log = logging.MustGetLogger("go-encrypt")
@@ -63,10 +64,12 @@ func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
 		case event := <-routeWatch.ResultChan():
 			route := event.Object.(*routev1.Route)
 
-			log.Info(event.Type, "\t", route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
+			log.Info(route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
 
-			if route.Spec.TLS == nil {
-				go makeRoute(route)
+			if event.Type == watch.Added || event.Type == watch.Modified {
+				if route.Spec.TLS == nil {
+					go makeRoute(route)
+				}
 			}
 		}
 	}
