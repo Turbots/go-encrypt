@@ -1,18 +1,24 @@
 package main
 
 import (
-	"log"
-
 	k8sMetav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sClientCmd "k8s.io/client-go/tools/clientcmd"
 	routev1 "github.com/openshift/api/route/v1"
 	routeClientv1 "github.com/openshift/client-go/route/clientset/versioned/typed/route/v1"
-	"time"
+
+	"github.com/op/go-logging"
 	"os"
 )
 
+var log = logging.MustGetLogger("go-encrypt")
+var format = logging.MustStringFormatter(
+	`%{color}%{time:15:04:05.000} %{shortfunc:15s} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
+)
+
 func main() {
-	log.SetOutput(os.Stdout)
+	standardOut := logging.NewLogBackend(os.Stdout, "", 0)
+	formatter := logging.NewBackendFormatter(standardOut, format)
+	logging.SetBackend(formatter)
 
 	kubeConfig := k8sClientCmd.NewNonInteractiveDeferredLoadingClientConfig(
 		k8sClientCmd.NewDefaultClientConfigLoadingRules(),
@@ -24,17 +30,15 @@ func main() {
 		panic(err)
 	}
 
-	log.Println("Go Encrypt - Copyright Ordina JWorks 2018")
+	log.Info("Go Encrypt - Copyright Ordina JWorks 2018")
 
 	go watchRoutes(namespace, kubeConfig)
 
-	for true {
-		time.Sleep(time.Hour)
-	}
+	select {}
 }
 
 func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
-	log.Println("Watching for Routes in namespace ", namespace)
+	log.Info("Watching for Routes in namespace ", namespace)
 
 	restConfig, err := kubeConfig.ClientConfig()
 
@@ -59,8 +63,15 @@ func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
 		case event := <-routeWatch.ResultChan():
 			route := event.Object.(*routev1.Route)
 
-			log.Println("Route Event Received")
-			log.Println(route.Name, "\t", route.Spec.Host)
+			log.Info(event.Type, "\t", route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
+
+			if (route.Spec.TLS == nil) {
+				go makeRoute(route)
+			}
 		}
 	}
+}
+
+func makeRoute(route *routev1.Route) {
+
 }
