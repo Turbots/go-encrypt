@@ -5,8 +5,8 @@ metadata:
 spec:
   resources:
     limits:
-      cpu: "1000m"
-      memory: "1Gi"
+      cpu: "2"
+      memory: "2Gi"
   triggers:
     - type: "GitHub"
       github:

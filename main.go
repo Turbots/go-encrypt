@@ -39,7 +39,7 @@ func main() {
 }
 
 func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
-	log.Info("Watching for Routes in namespace ", namespace)
+	log.Info("Watching for Routes in namespace %v", namespace)
 
 	restConfig, err := kubeConfig.ClientConfig()
 
@@ -64,17 +64,17 @@ func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
 		case event := <-routeWatch.ResultChan():
 			route := event.Object.(*routev1.Route)
 
-			log.Info(route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
+			log.Info("%v %v %v %v", route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
 
 			if event.Type == watch.Added || event.Type == watch.Modified {
 				if route.Spec.TLS == nil {
-					go makeRoute(route)
+					go secureRoute(route)
 				}
 			}
 		}
 	}
 }
 
-func makeRoute(route *routev1.Route) {
-	log.Info("Creating route for", route.Name)
+func secureRoute(route *routev1.Route) {
+	log.Info("Creating route for %v", route.Name)
 }
