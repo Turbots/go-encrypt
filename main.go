@@ -65,7 +65,7 @@ func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
 
 			log.Info(event.Type, "\t", route.Name, route.Spec.Host, "TLS:", route.Spec.TLS)
 
-			if (route.Spec.TLS == nil) {
+			if route.Spec.TLS == nil {
 				go makeRoute(route)
 			}
 		}
@@ -73,5 +73,5 @@ func watchRoutes(namespace string, kubeConfig k8sClientCmd.ClientConfig) {
 }
 
 func makeRoute(route *routev1.Route) {
-
+	log.Info("Creating route for", route.Name)
 }
